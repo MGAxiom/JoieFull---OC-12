@@ -6,5 +6,5 @@ data class Product(
     val price: Double,
     val strikedPrice: Double,
     val rate: Double,
-    val imageUrl: String
+    val imageUrl: String,
 )
