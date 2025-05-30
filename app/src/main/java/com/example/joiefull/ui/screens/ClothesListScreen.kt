@@ -1,7 +1,9 @@
 package com.example.joiefull.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,34 +27,46 @@ fun ClothesListScreen(
     onClotheTap: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // TODO: Add Shimmer effect for loading state
     val clothesCategory = listOf("Hauts", "Bas", "Sacs")
     Scaffold(
         modifier =
             modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .fillMaxSize(),
     ) { innerPadding ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier.padding(
+                top = innerPadding.calculateTopPadding(),
+                bottom = innerPadding.calculateBottomPadding()
+            ),
         ) {
             items(items = clothesCategory, itemContent = { category ->
-                Text(
-                    text = category,
-                    fontSize = 29.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth(),
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
-                    repeat(10) {
-                        ProductListItem(
-                            modifier = modifier.fillMaxWidth(),
-                        )
+                    Text(
+                        text = category,
+                        fontSize = 29.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    ) {
+                        repeat(10) {
+                            ProductListItem(
+                                isDetails = false,
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onClotheTap()
+                                    },
+                            )
+                        }
                     }
                 }
             })

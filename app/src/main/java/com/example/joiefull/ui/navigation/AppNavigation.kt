@@ -22,8 +22,6 @@ fun JoieFullApp() {
         composable("details") {
             ClothesDetails(
                 onBack = { navController.popBackStack() },
-                onShare = { },
-                description = "TODO()",
             )
         }
     }
