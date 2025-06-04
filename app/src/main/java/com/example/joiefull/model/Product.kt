@@ -7,4 +7,13 @@ data class Product(
     val strikedPrice: Double,
     val rate: Double,
     val imageUrl: String,
+    val imageDescription: String,
+    val category: Category,
 )
+
+enum class Category {
+    ACCESSORIES,
+    BOTTOMS,
+    SHOES,
+    TOPS,
+}

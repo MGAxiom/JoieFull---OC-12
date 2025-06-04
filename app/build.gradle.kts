@@ -68,6 +68,18 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    //Retrofit
+    implementation(libs.moshi)
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.moshi.v1150)
+    implementation(libs.moshi.kotlin)
+
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose.viewmodel)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -36,10 +36,11 @@ fun ClothesListScreen(
     ) { innerPadding ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = modifier.padding(
-                top = innerPadding.calculateTopPadding(),
-                bottom = innerPadding.calculateBottomPadding()
-            ),
+            modifier =
+                modifier.padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding(),
+                ),
         ) {
             items(items = clothesCategory, itemContent = { category ->
                 Column(
@@ -60,11 +61,13 @@ fun ClothesListScreen(
                         repeat(10) {
                             ProductListItem(
                                 isDetails = false,
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onClotheTap()
-                                    },
+                                modifier =
+                                    modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onClotheTap()
+                                        },
+                                onNavigateBack = {},
                             )
                         }
                     }

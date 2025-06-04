@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,7 +34,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import coil3.ColorImage
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
@@ -51,10 +47,15 @@ fun ProductImageCard(
     product: Product,
     isDetails: Boolean?,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
+    onShare: () -> Unit,
 ) {
     Box {
         when (isDetails) {
-            true -> DetailsCard()
+            true -> DetailsCard(
+                onNavigateBack = { onNavigateBack() },
+                onShare = {},
+            )
             false -> ListCard()
             null -> {}
         }
@@ -92,6 +93,7 @@ fun ListCard() {
 fun DetailsCard(
     onNavigateBack: () -> Unit = {},
     onShare: () -> Unit = {},
+    scrimColor: Color = Color.White.copy(alpha = 0.3f),
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -126,6 +128,7 @@ fun DetailsCard(
                 ) {
                     SmallIconButton(
                         onClick = onNavigateBack,
+                        modifier = Modifier.background(scrimColor, CircleShape)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -136,6 +139,7 @@ fun DetailsCard(
                     }
                     SmallIconButton(
                         onClick = onShare,
+                        modifier = Modifier.background(scrimColor, CircleShape)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.outline_share_24),
@@ -176,14 +180,6 @@ fun CustomPillButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val color =
-        Brush.infinitelyAnimatingLinearGradient(
-            listOf(
-                Color.Cyan,
-                Color.Yellow,
-                Color.Magenta,
-            ),
-        )
 
     Button(
         onClick = onClick,
@@ -207,7 +203,7 @@ fun CustomPillButton(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Icon(
-                Icons.Outlined.Favorite,
+                painter = painterResource(R.drawable.outline_favorite_border_24),
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
             )
@@ -236,6 +232,8 @@ fun CustomImageCardPreview() {
                 imageUrl = "",
             ),
             isDetails = false,
+            onNavigateBack = {},
+            onShare = {},
         )
     }
 }

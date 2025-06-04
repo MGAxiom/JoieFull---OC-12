@@ -11,13 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.joiefull.R
 import com.example.joiefull.ui.components.ProductListItem
 
@@ -43,10 +43,11 @@ import com.example.joiefull.ui.components.ProductListItem
 fun ClothesDetails(
     onBack: () -> Unit,
     onShare: () -> Unit = {},
-    description: String = "Description",
+    description: String = "Lorem Ipsum at dominus mundo deus trope mundi, et filiet mundo dominus",
     modifier: Modifier = Modifier,
 ) {
     var rating by remember { mutableStateOf(0f) }
+    var value by remember { mutableStateOf("") }
 
     Scaffold(
         modifier =
@@ -59,17 +60,24 @@ fun ClothesDetails(
             modifier =
                 modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-            // .verticalScroll(rememberScrollState()),
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
         ) {
             ProductListItem(
                 isDetails = true,
+                onNavigateBack = onBack,
             )
-            Text(description ?: "Hello")
+            Text(description)
             RatingComponent()
             OutlinedTextField(
-                value = "Partagez ici vos impressions sur cette pièce",
-                onValueChange = {},
+                placeholder = {
+                    Text(
+                        text = "Partagez ici vos impressions sur cette pièce",
+                        fontSize = 15.sp,
+                    )
+                },
+                value = value,
+                onValueChange = { value = it },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
             )
@@ -82,22 +90,23 @@ private fun RatingComponent() {
     var rating by remember { mutableStateOf(3f) }
 
     Row(
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_background),
             contentDescription = "Profile image",
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
+            modifier =
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape),
         )
         StarRatingBar(
             maxStars = 5,
             rating = rating,
             onRatingChanged = {
                 rating = it
-            }
+            },
         )
     }
 }
@@ -106,33 +115,40 @@ private fun RatingComponent() {
 fun StarRatingBar(
     maxStars: Int = 5,
     rating: Float,
-    onRatingChanged: (Float) -> Unit
+    onRatingChanged: (Float) -> Unit,
 ) {
     val density = LocalDensity.current.density
-    val starSize = (14f * density).dp
-    val starSpacing = (0.5f * density).dp
+    val starSize = (11f * density).dp
+    val starSpacing = (5f * density).dp
 
     Row(
-        modifier = Modifier.selectableGroup(),
+        modifier =
+            Modifier
+                .selectableGroup()
+                .padding(
+                    top = 4.dp,
+                    start = 10.dp,
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
             val isSelected = i <= rating
-            val icon = if (isSelected) Icons.Filled.Star else Icons.Outlined.Star
+            val icon = if (isSelected) R.drawable.star_rate else R.drawable.etoile_outlined_joiefull
             val iconTintColor = if (isSelected) Color(0xFFFFC700) else Color(0xFFBDBDBD)
             Icon(
-                imageVector = icon,
+                painter = painterResource(icon),
                 contentDescription = null,
                 tint = iconTintColor,
-                modifier = Modifier
-                    .selectable(
-                        selected = isSelected,
-                        onClick = {
-                            onRatingChanged(i.toFloat())
-                        }
-                    )
-                    .width(starSize)
-                    .height(starSize)
+                modifier =
+                    Modifier
+                        .selectable(
+                            selected = isSelected,
+                            onClick = {
+                                onRatingChanged(i.toFloat())
+                            },
+                        )
+                        .width(starSize)
+                        .height(starSize),
             )
 
             if (i < maxStars) {

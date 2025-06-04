@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,11 +31,13 @@ import com.example.joiefull.model.Product
 internal fun ProductListItem(
     isDetails: Boolean,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .padding(top = 8.dp),
+        modifier =
+            modifier
+                .padding(top = 8.dp),
     ) {
         ProductImageCard(
             product =
@@ -48,6 +51,8 @@ internal fun ProductListItem(
                 ),
             modifier = Modifier,
             isDetails = isDetails,
+            onNavigateBack = { onNavigateBack() },
+            onShare = {},
         )
         ProductDescription(
             product =
@@ -74,28 +79,31 @@ private fun ProductDescription(
         modifier =
             modifier
                 .then(
-                    if (!isDetails) Modifier.size(width = 200.dp, 50.dp) else Modifier.fillMaxWidth()
+                    if (!isDetails) Modifier.size(width = 200.dp, 50.dp) else Modifier.fillMaxWidth(),
                 )
                 .padding(start = 8.dp, end = 8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = product.name,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f),
             )
             Row(
-                // horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painterResource(R.drawable.star_rate),
                     contentDescription = null,
-                    modifier = Modifier.padding(top = 1.dp, end = 2.dp),
+                    modifier = Modifier.padding(end = 2.dp),
                 )
                 Text(product.rate.toString())
             }
@@ -128,6 +136,7 @@ fun ProductDetailsItemPreview() {
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
         ProductListItem(
             isDetails = true,
+            onNavigateBack = {},
         )
     }
 }
@@ -144,6 +153,7 @@ fun ProductListItemPreview() {
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
         ProductListItem(
             isDetails = false,
+            onNavigateBack = {},
         )
     }
 }
