@@ -40,6 +40,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
+import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 
 @Composable
@@ -55,8 +56,13 @@ fun ProductImageCard(
             true -> DetailsCard(
                 onNavigateBack = { onNavigateBack() },
                 onShare = {},
+                modifier = modifier,
             )
-            false -> ListCard()
+            false -> ListCard(
+                productImgUrl = product.imageUrl,
+                productImgDescription = product.imageDescription,
+                modifier = modifier,
+            )
             null -> {}
         }
         CustomPillButton(
@@ -71,16 +77,18 @@ fun ProductImageCard(
 }
 
 @Composable
-fun ListCard() {
+fun ListCard(
+    productImgUrl: String,
+    productImgDescription: String,
+    modifier: Modifier
+) {
     Card(
         shape = MaterialTheme.shapes.large,
+        modifier = modifier
     ) {
         AsyncImage(
-            model =
-                "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                    "main/img/accessories/1.jpg",
-            contentDescription = "",
+            model = productImgUrl,
+            contentDescription = productImgDescription,
             contentScale = ContentScale.FillWidth,
             modifier =
                 Modifier
@@ -94,6 +102,7 @@ fun DetailsCard(
     onNavigateBack: () -> Unit = {},
     onShare: () -> Unit = {},
     scrimColor: Color = Color.White.copy(alpha = 0.3f),
+    modifier: Modifier
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -101,7 +110,7 @@ fun DetailsCard(
         Column {
             Box(
                 modifier =
-                    Modifier
+                    modifier
                         .fillMaxWidth()
                         .height(480.dp),
             ) {
@@ -230,6 +239,8 @@ fun CustomImageCardPreview() {
                 strikedPrice = 55.1,
                 rate = 0.0,
                 imageUrl = "",
+                imageDescription = "",
+                category = Category.TOPS,
             ),
             isDetails = false,
             onNavigateBack = {},
@@ -248,7 +259,9 @@ fun DetailsCardPreview() {
         }
 
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
-        DetailsCard()
+        DetailsCard(
+            modifier = Modifier
+        )
     }
 }
 
@@ -262,7 +275,13 @@ fun ListCardPreview() {
         }
 
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
-        ListCard()
+        ListCard(
+            productImgUrl = "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
+            productImgDescription = "",
+            modifier = Modifier
+        )
     }
 }
 

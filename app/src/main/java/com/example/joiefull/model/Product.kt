@@ -11,9 +11,11 @@ data class Product(
     val category: Category,
 )
 
-enum class Category {
-    ACCESSORIES,
-    BOTTOMS,
-    SHOES,
-    TOPS,
+enum class Category(
+    name: String
+) {
+    ACCESSORIES(name = "Accessoires"),
+    BOTTOMS(name = "Bas"),
+    SHOES(name = "Chaussures"),
+    TOPS(name = "Hauts"),
 }

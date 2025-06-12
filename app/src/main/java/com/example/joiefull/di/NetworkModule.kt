@@ -16,7 +16,7 @@ val networkModule = module {
     }
     single {
         Retrofit.Builder()
-            .baseUrl("OpenClassrooms-Student-Center/D-velopper-une-interface-accessible-en-Jetpack-Compose/main/api/clothes.json")
+            .baseUrl("https://raw.githubusercontent.com/")
             .addConverterFactory(MoshiConverterFactory.create(get()))
             .build()
     }

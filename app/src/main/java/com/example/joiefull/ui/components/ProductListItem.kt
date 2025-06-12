@@ -20,16 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.ColorImage
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
+import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
+import kotlin.math.roundToInt
 
 @Composable
 internal fun ProductListItem(
     isDetails: Boolean,
+    product: Product,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
 ) {
@@ -40,30 +44,14 @@ internal fun ProductListItem(
                 .padding(top = 8.dp),
     ) {
         ProductImageCard(
-            product =
-                Product(
-                    id = "1",
-                    name = "Veste Urbaine",
-                    price = 34.0,
-                    strikedPrice = 55.1,
-                    rate = 0.0,
-                    imageUrl = "",
-                ),
+            product = product,
             modifier = Modifier,
             isDetails = isDetails,
             onNavigateBack = { onNavigateBack() },
             onShare = {},
         )
         ProductDescription(
-            product =
-                Product(
-                    id = "1",
-                    name = "Veste Urbaine",
-                    price = 0.0,
-                    strikedPrice = 0.0,
-                    rate = 0.0,
-                    imageUrl = "",
-                ),
+            product = product,
             isDetails = isDetails,
         )
     }
@@ -79,7 +67,10 @@ private fun ProductDescription(
         modifier =
             modifier
                 .then(
-                    if (!isDetails) Modifier.size(width = 200.dp, 50.dp) else Modifier.fillMaxWidth(),
+                    if (!isDetails) Modifier.size(
+                        width = 200.dp,
+                        50.dp
+                    ) else Modifier.fillMaxWidth(),
                 )
                 .padding(start = 8.dp, end = 8.dp),
     ) {
@@ -92,7 +83,8 @@ private fun ProductDescription(
         ) {
             Text(
                 text = product.name,
-                fontWeight = FontWeight.Bold,
+                //fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
                 modifier = Modifier.weight(1f),
             )
             Row(
@@ -105,7 +97,7 @@ private fun ProductDescription(
                     contentDescription = null,
                     modifier = Modifier.padding(end = 2.dp),
                 )
-                Text(product.rate.toString())
+                Text(product.rate.roundToInt().toString())
             }
         }
         Row(
@@ -113,11 +105,11 @@ private fun ProductDescription(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = product.price.toString() + "€",
+                text = product.price.roundToInt().toString() + "€",
                 modifier = Modifier.weight(1f),
             )
             Text(
-                text = product.strikedPrice.toString() + "€",
+                text = product.strikedPrice.roundToInt().toString() + "€",
                 style = TextStyle(textDecoration = TextDecoration.LineThrough),
             )
         }
@@ -137,6 +129,17 @@ fun ProductDetailsItemPreview() {
         ProductListItem(
             isDetails = true,
             onNavigateBack = {},
+            product =
+                Product(
+                    id = "1",
+                    name = "Veste Urbaine",
+                    price = 34.0,
+                    strikedPrice = 55.1,
+                    rate = 0.0,
+                    imageUrl = "",
+                    category = Category.TOPS,
+                    imageDescription = "",
+                ),
         )
     }
 }
@@ -154,6 +157,17 @@ fun ProductListItemPreview() {
         ProductListItem(
             isDetails = false,
             onNavigateBack = {},
+            product =
+                Product(
+                    id = "1",
+                    name = "Veste Urbaine",
+                    price = 34.0,
+                    strikedPrice = 55.1,
+                    rate = 0.0,
+                    imageUrl = "",
+                    category = Category.TOPS,
+                    imageDescription = "",
+                ),
         )
     }
 }
@@ -170,6 +184,8 @@ fun ProductDescriptionPreview() {
                 strikedPrice = 55.1,
                 rate = 0.0,
                 imageUrl = "",
+                category = Category.TOPS,
+                imageDescription = "",
             ),
         isDetails = false,
     )

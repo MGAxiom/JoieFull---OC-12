@@ -37,12 +37,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.joiefull.R
+import com.example.joiefull.model.Category
+import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
 
 @Composable
 fun ClothesDetails(
     onBack: () -> Unit,
     onShare: () -> Unit = {},
+    product: Product,
     description: String = "Lorem Ipsum at dominus mundo deus trope mundi, et filiet mundo dominus",
     modifier: Modifier = Modifier,
 ) {
@@ -66,6 +69,7 @@ fun ClothesDetails(
             ProductListItem(
                 isDetails = true,
                 onNavigateBack = onBack,
+                product = product,
             )
             Text(description)
             RatingComponent()
@@ -165,5 +169,15 @@ fun ClothesDetailsPreview() {
         onBack = {},
         onShare = {},
         description = "Lorem Ipsum at dominus mundo deus trope mundi, et filiet mundo dominus",
+        product = Product(
+            id = "1",
+            name = "Veste Urbaine",
+            price = 34.0,
+            strikedPrice = 55.1,
+            rate = 0.0,
+            imageUrl = "",
+            category = Category.TOPS,
+            imageDescription = "",
+        )
     )
 }
