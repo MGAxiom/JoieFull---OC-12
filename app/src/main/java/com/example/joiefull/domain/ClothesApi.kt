@@ -1,6 +1,5 @@
 package com.example.joiefull.domain
 
-
 import com.example.joiefull.data.model.ProductResponse
 import retrofit2.http.GET
 

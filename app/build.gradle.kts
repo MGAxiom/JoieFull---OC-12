@@ -68,7 +68,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    //Retrofit
+    // Retrofit
     implementation(libs.moshi)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
@@ -78,7 +78,6 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.compose.viewmodel)
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

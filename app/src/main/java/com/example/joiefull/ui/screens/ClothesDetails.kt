@@ -3,6 +3,7 @@ package com.example.joiefull.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,18 +39,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.joiefull.R
-import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
+import com.example.joiefull.ui.viewmodel.ClothesListViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ClothesDetails(
     onBack: () -> Unit,
     onShare: () -> Unit = {},
-    product: Product,
-    description: String = "Lorem Ipsum at dominus mundo deus trope mundi, et filiet mundo dominus",
+    productId: String,
     modifier: Modifier = Modifier,
 ) {
+    val viewModel: ClothesListViewModel = koinViewModel()
+    val product by viewModel.setProductDetails(productId).collectAsState(initial = null)
+
     var rating by remember { mutableStateOf(0f) }
     var value by remember { mutableStateOf("") }
 
@@ -58,34 +63,15 @@ fun ClothesDetails(
                 .fillMaxSize()
                 .padding(16.dp),
     ) { innerPadding ->
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier =
-                modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
-        ) {
-            ProductListItem(
-                isDetails = true,
-                onNavigateBack = onBack,
-                product = product,
-            )
-            Text(description)
-            RatingComponent()
-            OutlinedTextField(
-                placeholder = {
-                    Text(
-                        text = "Partagez ici vos impressions sur cette pièce",
-                        fontSize = 15.sp,
-                    )
-                },
-                value = value,
-                onValueChange = { value = it },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-            )
-        }
+        ProductDetailContent(
+            innerPadding = innerPadding,
+            product = product,
+            onBack = onBack,
+            onShare = onShare,
+            textFieldValue = value,
+            onTextfieldChanged = { value = it },
+            modifier = modifier,
+        )
     }
 }
 
@@ -97,7 +83,7 @@ private fun RatingComponent() {
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.ico_ne_utilisateur_neutre),
             contentDescription = "Profile image",
             contentScale = ContentScale.Crop,
             modifier =
@@ -111,6 +97,48 @@ private fun RatingComponent() {
             onRatingChanged = {
                 rating = it
             },
+        )
+    }
+}
+
+@Composable
+fun ProductDetailContent(
+    innerPadding: PaddingValues,
+    product: Product?,
+    onBack: () -> Unit,
+    onShare: () -> Unit,
+    textFieldValue: String,
+    onTextfieldChanged: (String) -> Unit,
+    modifier: Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+    ) {
+        product?.let {
+            ProductListItem(
+                isDetails = true,
+                onNavigateBack = onBack,
+                product = it,
+            )
+            Text(it.imageDescription)
+        }
+        RatingComponent()
+        OutlinedTextField(
+            placeholder = {
+                Text(
+                    text = "Partagez ici vos impressions sur cette pièce",
+                    fontSize = 15.sp,
+                )
+            },
+            value = textFieldValue,
+            onValueChange = onTextfieldChanged,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp),
         )
     }
 }
@@ -168,16 +196,6 @@ fun ClothesDetailsPreview() {
     ClothesDetails(
         onBack = {},
         onShare = {},
-        description = "Lorem Ipsum at dominus mundo deus trope mundi, et filiet mundo dominus",
-        product = Product(
-            id = "1",
-            name = "Veste Urbaine",
-            price = 34.0,
-            strikedPrice = 55.1,
-            rate = 0.0,
-            imageUrl = "",
-            category = Category.TOPS,
-            imageDescription = "",
-        )
+        productId = "1",
     )
 }

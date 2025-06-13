@@ -1,16 +1,17 @@
 package com.example.joiefull.di
 
-
 import com.example.joiefull.data.ClothesRepository
 import com.example.joiefull.data.ClothesRepositoryImpl
 import com.example.joiefull.ui.viewmodel.ClothesListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-
-val viewModelModule = module {
-    viewModel { ClothesListViewModel(get()) }
-    factory<ClothesRepository> { ClothesRepositoryImpl(
-        clothesApi = get()
-    )}
-}
+val viewModelModule =
+    module {
+        viewModel { ClothesListViewModel(get()) }
+        factory<ClothesRepository> {
+            ClothesRepositoryImpl(
+                clothesApi = get(),
+            )
+        }
+    }

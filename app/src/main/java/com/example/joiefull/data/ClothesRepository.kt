@@ -13,9 +13,10 @@ interface ClothesRepository {
 class ClothesRepositoryImpl(private val clothesApi: ClothesApi) : ClothesRepository {
     override suspend fun getAllClothes(): Result<List<Product>> {
         return try {
-            val clothes = withContext(Dispatchers.IO) {
-                clothesApi.getClothes()
-            }
+            val clothes =
+                withContext(Dispatchers.IO) {
+                    clothesApi.getClothes()
+                }
             val mappedClothes = clothes.map { it.toDomain() }
             Result.success(mappedClothes)
         } catch (e: Exception) {

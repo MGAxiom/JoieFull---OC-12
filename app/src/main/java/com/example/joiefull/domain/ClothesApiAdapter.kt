@@ -11,11 +11,11 @@ data class ProductResponse(
     @Json(name = "category") val category: String,
     @Json(name = "likes") val likes: Int,
     @Json(name = "price") val price: Double,
-    @Json(name = "original_price") val originalPrice: Double
+    @Json(name = "original_price") val originalPrice: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class PictureInfo(
     @Json(name = "url") val url: String,
-    @Json(name = "description") val description: String
+    @Json(name = "description") val description: String,
 )

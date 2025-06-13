@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -27,7 +26,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
@@ -53,16 +51,19 @@ fun ProductImageCard(
 ) {
     Box {
         when (isDetails) {
-            true -> DetailsCard(
-                onNavigateBack = { onNavigateBack() },
-                onShare = {},
-                modifier = modifier,
-            )
-            false -> ListCard(
-                productImgUrl = product.imageUrl,
-                productImgDescription = product.imageDescription,
-                modifier = modifier,
-            )
+            true ->
+                DetailsCard(
+                    onNavigateBack = { onNavigateBack() },
+                    onShare = {},
+                    imageUrl = product.imageUrl,
+                    modifier = modifier,
+                )
+            false ->
+                ListCard(
+                    productImgUrl = product.imageUrl,
+                    productImgDescription = product.imageDescription,
+                    modifier = modifier,
+                )
             null -> {}
         }
         CustomPillButton(
@@ -80,11 +81,11 @@ fun ProductImageCard(
 fun ListCard(
     productImgUrl: String,
     productImgDescription: String,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
-        modifier = modifier
+        modifier = modifier,
     ) {
         AsyncImage(
             model = productImgUrl,
@@ -101,8 +102,9 @@ fun ListCard(
 fun DetailsCard(
     onNavigateBack: () -> Unit = {},
     onShare: () -> Unit = {},
+    imageUrl: String,
     scrimColor: Color = Color.White.copy(alpha = 0.3f),
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -115,10 +117,7 @@ fun DetailsCard(
                         .height(480.dp),
             ) {
                 AsyncImage(
-                    model =
-                        "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                            "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                            "main/img/accessories/1.jpg",
+                    model = imageUrl,
                     contentDescription = "",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier,
@@ -137,7 +136,7 @@ fun DetailsCard(
                 ) {
                     SmallIconButton(
                         onClick = onNavigateBack,
-                        modifier = Modifier.background(scrimColor, CircleShape)
+                        modifier = Modifier.background(scrimColor, CircleShape),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -148,7 +147,7 @@ fun DetailsCard(
                     }
                     SmallIconButton(
                         onClick = onShare,
-                        modifier = Modifier.background(scrimColor, CircleShape)
+                        modifier = Modifier.background(scrimColor, CircleShape),
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.outline_share_24),
@@ -189,7 +188,6 @@ fun CustomPillButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     Button(
         onClick = onClick,
         modifier = modifier.defaultMinSize(minHeight = 8.dp),
@@ -260,7 +258,11 @@ fun DetailsCardPreview() {
 
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
         DetailsCard(
-            modifier = Modifier
+            imageUrl =
+                "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
+            modifier = Modifier,
         )
     }
 }
@@ -276,11 +278,12 @@ fun ListCardPreview() {
 
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
         ListCard(
-            productImgUrl = "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
+            productImgUrl =
+                "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
                     "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
                     "main/img/accessories/1.jpg",
             productImgDescription = "",
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }

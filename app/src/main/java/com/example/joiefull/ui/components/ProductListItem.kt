@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,10 +66,14 @@ private fun ProductDescription(
         modifier =
             modifier
                 .then(
-                    if (!isDetails) Modifier.size(
-                        width = 200.dp,
-                        50.dp
-                    ) else Modifier.fillMaxWidth(),
+                    if (!isDetails) {
+                        Modifier.size(
+                            width = 200.dp,
+                            50.dp,
+                        )
+                    } else {
+                        Modifier.fillMaxWidth()
+                    },
                 )
                 .padding(start = 8.dp, end = 8.dp),
     ) {
@@ -83,8 +86,9 @@ private fun ProductDescription(
         ) {
             Text(
                 text = product.name,
-                //fontWeight = FontWeight.Bold,
+                // fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
+                maxLines = 1,
                 modifier = Modifier.weight(1f),
             )
             Row(
@@ -101,7 +105,7 @@ private fun ProductDescription(
             }
         }
         Row(
-            modifier = Modifier,
+            modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
