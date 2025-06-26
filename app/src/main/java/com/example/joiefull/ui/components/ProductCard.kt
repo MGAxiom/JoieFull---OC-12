@@ -38,7 +38,6 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
-import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 
 @Composable
@@ -238,7 +237,7 @@ fun CustomImageCardPreview() {
                 rate = 0.0,
                 imageUrl = "",
                 imageDescription = "",
-                category = Category.TOPS,
+                category = "Tops",
             ),
             isDetails = false,
             onNavigateBack = {},

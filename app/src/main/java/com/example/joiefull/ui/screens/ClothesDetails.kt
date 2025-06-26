@@ -50,8 +50,8 @@ fun ClothesDetails(
     onShare: () -> Unit = {},
     productId: String,
     modifier: Modifier = Modifier,
+    viewModel: ClothesListViewModel
 ) {
-    val viewModel: ClothesListViewModel = koinViewModel()
     val product by viewModel.setProductDetails(productId).collectAsState(initial = null)
 
     var rating by remember { mutableStateOf(0f) }
@@ -197,5 +197,6 @@ fun ClothesDetailsPreview() {
         onBack = {},
         onShare = {},
         productId = "1",
+        viewModel = koinViewModel(),
     )
 }

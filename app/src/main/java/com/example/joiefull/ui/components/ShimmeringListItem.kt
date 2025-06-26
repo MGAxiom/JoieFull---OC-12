@@ -25,6 +25,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
+fun TitleShimmer() {
+    ShimmerComponent(
+        Modifier
+            .width(200.dp)
+        .height(30.dp)
+        .clip(RoundedCornerShape(20.dp))
+        .background(Color.LightGray),
+    )
+}
+
+
+@Composable
 fun ProductShimmer() {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -42,7 +54,7 @@ fun ProductShimmerDescription() {
                 .height(60.dp)
                 .padding(end = 20.dp),
     ) {
-        ShimmerEffect(
+        ShimmerComponent(
             Modifier
                 .width(180.dp)
                 .height(20.dp)
@@ -52,7 +64,7 @@ fun ProductShimmerDescription() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ShimmerEffect(
+        ShimmerComponent(
             Modifier
                 .width(100.dp)
                 .height(20.dp)
@@ -64,7 +76,7 @@ fun ProductShimmerDescription() {
 
 @Composable
 fun ProductShimmerCard() {
-    ShimmerEffect(
+    ShimmerComponent(
         modifier =
             Modifier
                 .size(198.dp)
@@ -73,7 +85,7 @@ fun ProductShimmerCard() {
 }
 
 @Composable
-fun ShimmerEffect(
+fun ShimmerComponent(
     modifier: Modifier,
     widthOfShadowBrush: Int = 500,
     angleOfAxisY: Float = 270f,

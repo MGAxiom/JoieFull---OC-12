@@ -1,7 +1,6 @@
 package com.example.joiefull.domain
 
 import com.example.joiefull.data.model.ProductResponse
-import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 
 fun ProductResponse.toDomain(): Product =
@@ -13,7 +12,7 @@ fun ProductResponse.toDomain(): Product =
         rate = likes.toDouble(),
         imageUrl = picture.url,
         imageDescription = picture.description,
-        category = Category.valueOf(this.category.uppercase()),
+        category = category.lowercase(),
     )
 
 fun List<ProductResponse>.toDomain(): List<Product> = map { it.toDomain() }

@@ -8,14 +8,5 @@ data class Product(
     val rate: Double,
     val imageUrl: String,
     val imageDescription: String,
-    val category: Category,
+    val category: String,
 )
-
-enum class Category(
-    val title: String,
-) {
-    ACCESSORIES("Accessoires"),
-    BOTTOMS("Bas"),
-    SHOES("Chaussures"),
-    TOPS("Hauts"),
-}

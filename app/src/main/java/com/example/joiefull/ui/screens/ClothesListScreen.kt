@@ -23,10 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
 import com.example.joiefull.ui.components.ProductShimmer
+import com.example.joiefull.ui.components.TitleShimmer
 import com.example.joiefull.ui.viewmodel.ClothesListUiState
 import com.example.joiefull.ui.viewmodel.ClothesListViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -35,12 +35,9 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ClothesListScreen(
     onClotheTap: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ClothesListViewModel,
 ) {
-    val viewModel: ClothesListViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
-
-    // TODO: Add Shimmer effect for loading state
-    val clothesCategory = Category.entries.toList()
 
     Scaffold(
         modifier =
@@ -54,9 +51,9 @@ fun ClothesListScreen(
                 ShimmeringPlaceholders(
                     modifier = modifier,
                     innerPadding = innerPadding,
-                    categoriesList = clothesCategory,
                 )
             }
+
             is ClothesListUiState.Success -> {
                 GroupedProductList(
                     products = state.clothes.groupBy { it.category },
@@ -73,7 +70,7 @@ fun ClothesListScreen(
 
 @Composable
 fun GroupedProductList(
-    products: Map<Category, List<Product>>,
+    products: Map<String, List<Product>>,
     onClotheTap: (product: Product) -> Unit,
     innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -88,12 +85,12 @@ fun GroupedProductList(
                 bottom = innerPadding.calculateBottomPadding(),
             ),
     ) {
-        items(items = categoriesList, key = { it.key.name }) { (category, categorizedProducts) ->
+        items(items = categoriesList, key = { it.key }) { (category, categorizedProducts) ->
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(
-                    text = category.title,
+                    text = category.replaceFirstChar { it.uppercase() },
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier =
@@ -127,8 +124,9 @@ fun GroupedProductList(
 fun ShimmeringPlaceholders(
     modifier: Modifier,
     innerPadding: PaddingValues,
-    categoriesList: List<Category>,
 ) {
+    val numberOfPlaceholder = 3
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier =
@@ -137,18 +135,11 @@ fun ShimmeringPlaceholders(
                 bottom = innerPadding.calculateBottomPadding(),
             ),
     ) {
-        items(items = categoriesList) { category ->
+        items(numberOfPlaceholder) {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
-                Text(
-                    text = category.title,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth(),
-                )
+                TitleShimmer()
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier =
@@ -171,5 +162,6 @@ fun ShimmeringPlaceholders(
 fun ClothesListPreview() {
     ClothesListScreen(
         onClotheTap = {},
+        viewModel = koinViewModel(),
     )
 }

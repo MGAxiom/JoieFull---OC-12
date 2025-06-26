@@ -1,5 +1,6 @@
 package com.example.joiefull.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.joiefull.data.ClothesRepository
@@ -17,7 +18,7 @@ class ClothesListViewModel(
     val uiState: StateFlow<ClothesListUiState> = _uiState.asStateFlow()
 
     private val _allProductsFlow = MutableStateFlow<List<Product>>(emptyList())
-    val allProductsFlow: StateFlow<List<Product>> = _allProductsFlow.asStateFlow()
+    private val allProductsFlow: StateFlow<List<Product>> = _allProductsFlow.asStateFlow()
 
     init {
         fetchClothes()

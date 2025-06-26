@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,6 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
-import com.example.joiefull.model.Category
 import com.example.joiefull.model.Product
 import kotlin.math.roundToInt
 
@@ -86,8 +86,8 @@ private fun ProductDescription(
         ) {
             Text(
                 text = product.name,
-                // fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                fontSize = if(isDetails) 20.sp else 15.sp,
                 maxLines = 1,
                 modifier = Modifier.weight(1f),
             )
@@ -141,7 +141,7 @@ fun ProductDetailsItemPreview() {
                     strikedPrice = 55.1,
                     rate = 0.0,
                     imageUrl = "",
-                    category = Category.TOPS,
+                    category = "Tops",
                     imageDescription = "",
                 ),
         )
@@ -169,7 +169,7 @@ fun ProductListItemPreview() {
                     strikedPrice = 55.1,
                     rate = 0.0,
                     imageUrl = "",
-                    category = Category.TOPS,
+                    category = "Tops",
                     imageDescription = "",
                 ),
         )
@@ -188,7 +188,7 @@ fun ProductDescriptionPreview() {
                 strikedPrice = 55.1,
                 rate = 0.0,
                 imageUrl = "",
-                category = Category.TOPS,
+                category = "Tops",
                 imageDescription = "",
             ),
         isDetails = false,
