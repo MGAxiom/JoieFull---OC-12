@@ -1,7 +1,6 @@
 package com.example.joiefull.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,12 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.joiefull.ui.screens.ClothesDetails
 import com.example.joiefull.ui.screens.ClothesListScreen
-import com.example.joiefull.ui.viewmodel.ClothesListViewModel
+import com.example.joiefull.ui.viewmodel.ClothesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun JoieFullApp(navController: NavHostController = rememberNavController()) {
-    val viewModel: ClothesListViewModel = koinViewModel()
+    val viewModel: ClothesViewModel = koinViewModel()
 
     NavHost(
         navController = navController,

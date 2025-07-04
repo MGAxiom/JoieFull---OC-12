@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.joiefull.R
 import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
-import com.example.joiefull.ui.viewmodel.ClothesListViewModel
+import com.example.joiefull.ui.viewmodel.ClothesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -51,11 +51,11 @@ fun ClothesDetails(
     onShare: () -> Unit = {},
     productId: String,
     modifier: Modifier = Modifier,
-    viewModel: ClothesListViewModel,
+    viewModel: ClothesViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val product =
-        (uiState as? ClothesListViewModel.ClothesListUiState.Success)
+        (uiState as? ClothesViewModel.ClothesListUiState.Success)
             ?.clothes
             ?.find { it.id == productId }
 

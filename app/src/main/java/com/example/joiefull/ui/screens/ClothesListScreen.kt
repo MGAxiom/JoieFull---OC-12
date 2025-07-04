@@ -27,14 +27,14 @@ import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
 import com.example.joiefull.ui.components.ProductShimmer
 import com.example.joiefull.ui.components.TitleShimmer
-import com.example.joiefull.ui.viewmodel.ClothesListViewModel
+import com.example.joiefull.ui.viewmodel.ClothesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ClothesListScreen(
     onClotheTap: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ClothesListViewModel,
+    viewModel: ClothesViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -45,15 +45,15 @@ fun ClothesListScreen(
                 .padding(top = 16.dp),
     ) { innerPadding ->
         when (val state = uiState) {
-            is ClothesListViewModel.ClothesListUiState.Error -> Text(text = state.message)
-            is ClothesListViewModel.ClothesListUiState.Loading -> {
+            is ClothesViewModel.ClothesListUiState.Error -> Text(text = state.message)
+            is ClothesViewModel.ClothesListUiState.Loading -> {
                 ShimmeringPlaceholders(
                     modifier = modifier,
                     innerPadding = innerPadding,
                 )
             }
 
-            is ClothesListViewModel.ClothesListUiState.Success -> {
+            is ClothesViewModel.ClothesListUiState.Success -> {
                 GroupedProductList(
                     products = state.clothes.groupBy { it.category },
                     onClotheTap = {

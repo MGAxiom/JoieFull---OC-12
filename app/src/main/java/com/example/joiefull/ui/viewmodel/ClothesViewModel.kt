@@ -9,9 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ClothesListViewModel(
+class ClothesViewModel(
     private val clothesRepository: ClothesRepository,
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow<ClothesListUiState>(ClothesListUiState.Loading)
     val uiState: StateFlow<ClothesListUiState> = _uiState.asStateFlow()
 
