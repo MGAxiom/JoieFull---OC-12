@@ -35,6 +35,7 @@ internal fun ProductListItem(
     product: Product,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
+    onFavorite: (id: String) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -47,7 +48,7 @@ internal fun ProductListItem(
             modifier = Modifier,
             isDetails = isDetails,
             onNavigateBack = { onNavigateBack() },
-            onShare = {},
+            onFavorite = onFavorite,
         )
         ProductDescription(
             product = product,
@@ -87,7 +88,7 @@ private fun ProductDescription(
             Text(
                 text = product.name,
                 fontWeight = FontWeight.Bold,
-                fontSize = if(isDetails) 20.sp else 15.sp,
+                fontSize = if (isDetails) 20.sp else 15.sp,
                 maxLines = 1,
                 modifier = Modifier.weight(1f),
             )
@@ -143,7 +144,11 @@ fun ProductDetailsItemPreview() {
                     imageUrl = "",
                     category = "Tops",
                     imageDescription = "",
+                    rating = 0f,
+                    comment = "",
+                    isFavorite = false,
                 ),
+            onFavorite = {},
         )
     }
 }
@@ -171,7 +176,11 @@ fun ProductListItemPreview() {
                     imageUrl = "",
                     category = "Tops",
                     imageDescription = "",
+                    rating = 0f,
+                    comment = "",
+                    isFavorite = false,
                 ),
+            onFavorite = {},
         )
     }
 }

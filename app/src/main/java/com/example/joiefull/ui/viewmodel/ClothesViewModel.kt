@@ -1,6 +1,5 @@
 package com.example.joiefull.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.joiefull.data.ClothesRepository
@@ -8,7 +7,6 @@ import com.example.joiefull.model.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ClothesListViewModel(
@@ -16,9 +14,6 @@ class ClothesListViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ClothesListUiState>(ClothesListUiState.Loading)
     val uiState: StateFlow<ClothesListUiState> = _uiState.asStateFlow()
-
-    private val _allProductsFlow = MutableStateFlow<List<Product>>(emptyList())
-    private val allProductsFlow: StateFlow<List<Product>> = _allProductsFlow.asStateFlow()
 
     init {
         fetchClothes()
@@ -29,30 +24,58 @@ class ClothesListViewModel(
             _uiState.value = ClothesListUiState.Loading
             clothesRepository.getAllClothes()
                 .onSuccess { clothesList ->
-                    _allProductsFlow.value = clothesList
                     _uiState.value = ClothesListUiState.Success(clothesList)
                 }
                 .onFailure { exception ->
-                    _allProductsFlow.value = emptyList()
                     _uiState.value = ClothesListUiState.Error(exception.message ?: "Unknown error")
                 }
         }
     }
 
-    fun setProductDetails(productId: String) =
-        allProductsFlow.map { list ->
-            list.find { it.id == productId }
+    fun updateProductRating(
+        productId: String,
+        rating: Float,
+    ) {
+        val currentState = _uiState.value
+        if (currentState is ClothesListUiState.Success) {
+            val updatedProducts =
+                currentState.clothes.map { product ->
+                    if (product.id == productId) product.copy(rating = rating) else product
+                }
+            _uiState.value = ClothesListUiState.Success(updatedProducts)
         }
-
-    fun getClotheId(product: Product): String {
-        return product.id
     }
-}
 
-sealed class ClothesListUiState {
-    data object Loading : ClothesListUiState()
+    fun updateProductComment(
+        productId: String,
+        comment: String,
+    ) {
+        val currentState = _uiState.value
+        if (currentState is ClothesListUiState.Success) {
+            val updatedProducts =
+                currentState.clothes.map { product ->
+                    if (product.id == productId) product.copy(comment = comment) else product
+                }
+            _uiState.value = ClothesListUiState.Success(updatedProducts)
+        }
+    }
 
-    data class Success(val clothes: List<Product>) : ClothesListUiState()
+    fun toggleProductFavorite(productId: String) {
+        val currentState = _uiState.value
+        if (currentState is ClothesListUiState.Success) {
+            val updatedProducts =
+                currentState.clothes.map { product ->
+                    if (product.id == productId) product.copy(isFavorite = !product.isFavorite) else product
+                }
+            _uiState.value = ClothesListUiState.Success(updatedProducts)
+        }
+    }
 
-    data class Error(val message: String) : ClothesListUiState()
+    sealed class ClothesListUiState {
+        data object Loading : ClothesListUiState()
+
+        data class Success(val clothes: List<Product>) : ClothesListUiState()
+
+        data class Error(val message: String) : ClothesListUiState()
+    }
 }

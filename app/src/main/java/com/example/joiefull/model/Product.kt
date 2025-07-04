@@ -9,4 +9,7 @@ data class Product(
     val imageUrl: String,
     val imageDescription: String,
     val category: String,
+    val rating: Float? = null,
+    val comment: String? = null,
+    val isFavorite: Boolean = false,
 )

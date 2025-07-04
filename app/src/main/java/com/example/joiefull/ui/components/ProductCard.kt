@@ -1,5 +1,6 @@
 package com.example.joiefull.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,12 +24,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,35 +46,40 @@ import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
 import com.example.joiefull.model.Product
+import com.example.joiefull.utils.ShareButton
+import com.example.joiefull.utils.downloadImageAndGetUri
 
 @Composable
 fun ProductImageCard(
     product: Product,
     isDetails: Boolean?,
     modifier: Modifier = Modifier,
+    onFavorite: (String) -> Unit,
     onNavigateBack: () -> Unit,
-    onShare: () -> Unit,
 ) {
     Box {
         when (isDetails) {
             true ->
                 DetailsCard(
                     onNavigateBack = { onNavigateBack() },
-                    onShare = {},
                     imageUrl = product.imageUrl,
                     modifier = modifier,
+                    productTextInfos = "${product.name} - ${product.price}€"
                 )
+
             false ->
                 ListCard(
                     productImgUrl = product.imageUrl,
                     productImgDescription = product.imageDescription,
                     modifier = modifier,
                 )
+
             null -> {}
         }
         CustomPillButton(
-            text = "0",
-            onClick = {},
+            isLiked = product.isFavorite,
+            onClick = onFavorite,
+            id = product.id,
             modifier =
                 Modifier
                     .padding(end = 12.dp)
@@ -100,9 +112,8 @@ fun ListCard(
 @Composable
 fun DetailsCard(
     onNavigateBack: () -> Unit = {},
-    onShare: () -> Unit = {},
+    productTextInfos: String,
     imageUrl: String,
-    scrimColor: Color = Color.White.copy(alpha = 0.3f),
     modifier: Modifier,
 ) {
     Card(
@@ -118,7 +129,7 @@ fun DetailsCard(
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier,
                 )
                 Row(
@@ -133,28 +144,15 @@ fun DetailsCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    SmallIconButton(
+                    BackButton(
                         onClick = onNavigateBack,
-                        modifier = Modifier.background(scrimColor, CircleShape),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back",
-                            tint = Color.Black,
-                            modifier = Modifier.size(15.dp),
-                        )
-                    }
-                    SmallIconButton(
-                        onClick = onShare,
-                        modifier = Modifier.background(scrimColor, CircleShape),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_share_24),
-                            contentDescription = "Navigate back",
-                            tint = Color.Black,
-                            modifier = Modifier.size(15.dp),
-                        )
-                    }
+                        modifier = Modifier,
+                    )
+                    ShareButton(
+                        text = productTextInfos,
+                        imageUrl = imageUrl,
+                        modifier = Modifier,
+                    )
                 }
             }
         }
@@ -162,33 +160,39 @@ fun DetailsCard(
 }
 
 @Composable
-fun SmallIconButton(
+fun BackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Transparent,
-    content: @Composable () -> Unit,
 ) {
     IconButton(
         onClick = onClick,
         modifier =
             modifier
+                .background(Color.White.copy(alpha = 0.3f), CircleShape)
                 .size(36.dp)
                 .background(color = backgroundColor, shape = CircleShape)
                 .clip(CircleShape),
-        // This makes sure that the ripple effect stays within the circle
+        // Permet d'éviter d'avoir une ombre carré lors du clic
     ) {
-        content()
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Navigate back",
+            tint = Color.Black,
+            modifier = Modifier.size(15.dp),
+        )
     }
 }
 
 @Composable
 fun CustomPillButton(
-    text: String,
-    onClick: () -> Unit,
+    id: String,
+    isLiked: Boolean,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Button(
-        onClick = onClick,
+        onClick = { onClick(id) },
         modifier = modifier.defaultMinSize(minHeight = 8.dp),
         contentPadding =
             PaddingValues(
@@ -209,11 +213,18 @@ fun CustomPillButton(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Icon(
-                painter = painterResource(R.drawable.outline_favorite_border_24),
+                painter =
+                    if (isLiked) {
+                        painterResource(R.drawable.baseline_favorite_24)
+                    } else {
+                        painterResource(R.drawable.outline_favorite_border_24)
+                    },
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
             )
-            Text(text)
+            Text(
+                if (isLiked) "1" else "0",
+            )
         }
     }
 }
@@ -241,7 +252,7 @@ fun CustomImageCardPreview() {
             ),
             isDetails = false,
             onNavigateBack = {},
-            onShare = {},
+            onFavorite = {},
         )
     }
 }
@@ -259,9 +270,10 @@ fun DetailsCardPreview() {
         DetailsCard(
             imageUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                    "main/img/accessories/1.jpg",
+                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                        "main/img/accessories/1.jpg",
             modifier = Modifier,
+            productTextInfos = "Veste Urbaine - 34€",
         )
     }
 }
@@ -279,8 +291,8 @@ fun ListCardPreview() {
         ListCard(
             productImgUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                    "main/img/accessories/1.jpg",
+                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                        "main/img/accessories/1.jpg",
             productImgDescription = "",
             modifier = Modifier,
         )
@@ -291,7 +303,8 @@ fun ListCardPreview() {
 @Preview
 fun CustomPillButtonPreview() {
     CustomPillButton(
-        "0",
+        isLiked = true,
         onClick = {},
+        id = "",
     )
 }

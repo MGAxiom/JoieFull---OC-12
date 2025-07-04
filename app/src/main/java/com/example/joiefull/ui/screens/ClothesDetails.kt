@@ -17,6 +17,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -25,16 +27,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,12 +51,13 @@ fun ClothesDetails(
     onShare: () -> Unit = {},
     productId: String,
     modifier: Modifier = Modifier,
-    viewModel: ClothesListViewModel
+    viewModel: ClothesListViewModel,
 ) {
-    val product by viewModel.setProductDetails(productId).collectAsState(initial = null)
-
-    var rating by remember { mutableStateOf(0f) }
-    var value by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+    val product =
+        (uiState as? ClothesListViewModel.ClothesListUiState.Success)
+            ?.clothes
+            ?.find { it.id == productId }
 
     Scaffold(
         modifier =
@@ -68,17 +70,25 @@ fun ClothesDetails(
             product = product,
             onBack = onBack,
             onShare = onShare,
-            textFieldValue = value,
-            onTextfieldChanged = { value = it },
+            onTextfieldChanged = { comment ->
+                viewModel.updateProductComment(productId, comment)
+            },
             modifier = modifier,
+            onRatingChanged = { rating ->
+                viewModel.updateProductRating(productId, rating)
+            },
+            onToggleFavorite = {
+                viewModel.toggleProductFavorite(productId)
+            },
         )
     }
 }
 
 @Composable
-private fun RatingComponent() {
-    var rating by remember { mutableStateOf(3f) }
-
+private fun RatingComponent(
+    rating: Float,
+    onRatingChanged: (Float) -> Unit,
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
@@ -94,9 +104,7 @@ private fun RatingComponent() {
         StarRatingBar(
             maxStars = 5,
             rating = rating,
-            onRatingChanged = {
-                rating = it
-            },
+            onRatingChanged = onRatingChanged,
         )
     }
 }
@@ -107,10 +115,13 @@ fun ProductDetailContent(
     product: Product?,
     onBack: () -> Unit,
     onShare: () -> Unit,
-    textFieldValue: String,
+    onRatingChanged: (Float) -> Unit,
     onTextfieldChanged: (String) -> Unit,
     modifier: Modifier,
+    onToggleFavorite: (id: String) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier =
@@ -124,10 +135,14 @@ fun ProductDetailContent(
                 isDetails = true,
                 onNavigateBack = onBack,
                 product = it,
+                onFavorite = onToggleFavorite,
             )
             Text(it.imageDescription)
         }
-        RatingComponent()
+        RatingComponent(
+            rating = product?.rating ?: 0f,
+            onRatingChanged = onRatingChanged,
+        )
         OutlinedTextField(
             placeholder = {
                 Text(
@@ -135,8 +150,13 @@ fun ProductDetailContent(
                     fontSize = 15.sp,
                 )
             },
-            value = textFieldValue,
+            value = product?.comment ?: "",
             onValueChange = onTextfieldChanged,
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions =
+                KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
         )

@@ -27,7 +27,6 @@ import com.example.joiefull.model.Product
 import com.example.joiefull.ui.components.ProductListItem
 import com.example.joiefull.ui.components.ProductShimmer
 import com.example.joiefull.ui.components.TitleShimmer
-import com.example.joiefull.ui.viewmodel.ClothesListUiState
 import com.example.joiefull.ui.viewmodel.ClothesListViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -46,22 +45,25 @@ fun ClothesListScreen(
                 .padding(top = 16.dp),
     ) { innerPadding ->
         when (val state = uiState) {
-            is ClothesListUiState.Error -> Text(text = state.message)
-            is ClothesListUiState.Loading -> {
+            is ClothesListViewModel.ClothesListUiState.Error -> Text(text = state.message)
+            is ClothesListViewModel.ClothesListUiState.Loading -> {
                 ShimmeringPlaceholders(
                     modifier = modifier,
                     innerPadding = innerPadding,
                 )
             }
 
-            is ClothesListUiState.Success -> {
+            is ClothesListViewModel.ClothesListUiState.Success -> {
                 GroupedProductList(
                     products = state.clothes.groupBy { it.category },
                     onClotheTap = {
-                        val selectedProductId = viewModel.getClotheId(it)
+                        val selectedProductId = it.id
                         onClotheTap(selectedProductId)
                     },
                     innerPadding = innerPadding,
+                    isFavorite = { productId ->
+                        viewModel.toggleProductFavorite(productId)
+                    },
                 )
             }
         }
@@ -74,6 +76,7 @@ fun GroupedProductList(
     onClotheTap: (product: Product) -> Unit,
     innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    isFavorite: (id: String) -> Unit,
 ) {
     val categoriesList = products.entries.toList()
 
@@ -112,6 +115,7 @@ fun GroupedProductList(
                                         onClotheTap(product)
                                     },
                             onNavigateBack = {},
+                            onFavorite = isFavorite,
                         )
                     }
                 }

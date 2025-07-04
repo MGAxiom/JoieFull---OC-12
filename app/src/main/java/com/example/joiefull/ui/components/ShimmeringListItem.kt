@@ -29,12 +29,11 @@ fun TitleShimmer() {
     ShimmerComponent(
         Modifier
             .width(200.dp)
-        .height(30.dp)
-        .clip(RoundedCornerShape(20.dp))
-        .background(Color.LightGray),
+            .height(30.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color.LightGray),
     )
 }
-
 
 @Composable
 fun ProductShimmer() {
