@@ -35,6 +35,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,7 +50,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ClothesDetails(
     onBack: () -> Unit,
-    onShare: () -> Unit = {},
     productId: String,
     modifier: Modifier = Modifier,
     viewModel: ClothesViewModel,
@@ -69,7 +70,6 @@ fun ClothesDetails(
             innerPadding = innerPadding,
             product = product,
             onBack = onBack,
-            onShare = onShare,
             onTextfieldChanged = { comment ->
                 viewModel.updateProductComment(productId, comment)
             },
@@ -114,7 +114,6 @@ fun ProductDetailContent(
     innerPadding: PaddingValues,
     product: Product?,
     onBack: () -> Unit,
-    onShare: () -> Unit,
     onRatingChanged: (Float) -> Unit,
     onTextfieldChanged: (String) -> Unit,
     modifier: Modifier,
@@ -170,8 +169,8 @@ fun StarRatingBar(
     onRatingChanged: (Float) -> Unit,
 ) {
     val density = LocalDensity.current.density
-    val starSize = (11f * density).dp
-    val starSpacing = (5f * density).dp
+    val starSize = (13f * density).dp
+    val starSpacing = (6f * density).dp
 
     Row(
         modifier =
@@ -180,7 +179,10 @@ fun StarRatingBar(
                 .padding(
                     top = 4.dp,
                     start = 10.dp,
-                ),
+                )
+                .clearAndSetSemantics {
+                    contentDescription = "Rating"
+                },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
@@ -215,7 +217,6 @@ fun StarRatingBar(
 fun ClothesDetailsPreview() {
     ClothesDetails(
         onBack = {},
-        onShare = {},
         productId = "1",
         viewModel = koinViewModel(),
     )

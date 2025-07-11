@@ -48,10 +48,11 @@ fun ClothesListScreen(
                 .padding(top = 16.dp),
     ) { innerPadding ->
         when (val state = uiState) {
-            is ClothesViewModel.ClothesListUiState.Error -> RetryComponent(
-                onClick = { viewModel.fetchClothes() },
-                modifier = modifier
-            )
+            is ClothesViewModel.ClothesListUiState.Error ->
+                RetryComponent(
+                    onClick = { viewModel.fetchClothes() },
+                    modifier = modifier,
+                )
             is ClothesViewModel.ClothesListUiState.Loading -> {
                 ShimmeringPlaceholders(
                     modifier = modifier,

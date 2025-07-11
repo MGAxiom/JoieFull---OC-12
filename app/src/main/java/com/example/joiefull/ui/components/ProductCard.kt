@@ -1,6 +1,5 @@
 package com.example.joiefull.ui.components
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,10 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,8 +31,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.ColorImage
@@ -47,7 +46,6 @@ import coil3.compose.LocalAsyncImagePreviewHandler
 import com.example.joiefull.R
 import com.example.joiefull.model.Product
 import com.example.joiefull.utils.ShareButton
-import com.example.joiefull.utils.downloadImageAndGetUri
 
 @Composable
 fun ProductImageCard(
@@ -64,7 +62,7 @@ fun ProductImageCard(
                     onNavigateBack = { onNavigateBack() },
                     imageUrl = product.imageUrl,
                     modifier = modifier,
-                    productTextInfos = "${product.name} - ${product.price}€"
+                    productTextInfos = "${product.name} - ${product.price}€",
                 )
 
             false ->
@@ -82,6 +80,12 @@ fun ProductImageCard(
             id = product.id,
             modifier =
                 Modifier
+                    .semantics {
+                        role = Role.Button
+                        contentDescription = "Bouton de like, toucher le bouton pour ${
+                            if (!product.isFavorite) "mettre en favoris" else "retirer des favoris"
+                        }"
+                    }
                     .padding(end = 12.dp)
                     .align(Alignment.BottomEnd),
         )
@@ -118,11 +122,15 @@ fun DetailsCard(
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
+        modifier =
+            modifier.semantics {
+                contentDescription = productTextInfos
+            },
     ) {
         Column {
             Box(
                 modifier =
-                    modifier
+                    Modifier
                         .fillMaxWidth()
                         .height(480.dp),
             ) {
@@ -130,7 +138,10 @@ fun DetailsCard(
                     model = imageUrl,
                     contentDescription = "",
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier,
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription = productTextInfos
+                        },
                 )
                 Row(
                     modifier =
@@ -146,12 +157,20 @@ fun DetailsCard(
                 ) {
                     BackButton(
                         onClick = onNavigateBack,
-                        modifier = Modifier,
+                        modifier =
+                            Modifier.semantics {
+                                role = Role.Button
+                                contentDescription = "Bouton de retour"
+                            },
                     )
                     ShareButton(
                         text = productTextInfos,
                         imageUrl = imageUrl,
-                        modifier = Modifier,
+                        modifier =
+                            Modifier.semantics {
+                                role = Role.Button
+                                contentDescription = "Bouton de partage"
+                            },
                     )
                 }
             }
@@ -270,8 +289,8 @@ fun DetailsCardPreview() {
         DetailsCard(
             imageUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                        "main/img/accessories/1.jpg",
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
             modifier = Modifier,
             productTextInfos = "Veste Urbaine - 34€",
         )
@@ -291,8 +310,8 @@ fun ListCardPreview() {
         ListCard(
             productImgUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                        "main/img/accessories/1.jpg",
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
             productImgDescription = "",
             modifier = Modifier,
         )

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -73,7 +76,7 @@ private fun ProductDescription(
                             50.dp,
                         )
                     } else {
-                        Modifier.fillMaxWidth()
+                        Modifier.height(50.dp)
                     },
                 )
                 .padding(start = 8.dp, end = 8.dp),
@@ -102,20 +105,37 @@ private fun ProductDescription(
                     contentDescription = null,
                     modifier = Modifier.padding(end = 2.dp),
                 )
-                Text(product.rate.roundToInt().toString())
+                Text(
+                    text = product.rate.roundToInt().toString(),
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription = "${product.rate.roundToInt()} avis"
+                        },
+                )
             }
         }
         Row(
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
+            val productPrice = product.price.roundToInt()
+            val strikedProductPrice = product.strikedPrice.roundToInt()
             Text(
-                text = product.price.roundToInt().toString() + "€",
-                modifier = Modifier.weight(1f),
+                text = productPrice.toString() + "€",
+                modifier =
+                    Modifier
+                        .semantics {
+                            contentDescription = "Prix du produit $productPrice€"
+                        }
+                        .weight(1f),
             )
             Text(
-                text = product.strikedPrice.roundToInt().toString() + "€",
+                text = strikedProductPrice.toString() + "€",
                 style = TextStyle(textDecoration = TextDecoration.LineThrough),
+                modifier =
+                    Modifier.semantics {
+                        contentDescription = "Ancien prix du produit $strikedProductPrice€"
+                    },
             )
         }
     }

@@ -43,12 +43,13 @@ fun ShareButton(
         // Launch the download and sharing in a coroutine
         LaunchedEffect(Unit) {
             val uri = downloadImageAndGetUri(context, imageUrl)
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_TEXT, text)
-                type = "image/*"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val shareIntent =
+                Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    putExtra(Intent.EXTRA_TEXT, text)
+                    type = "image/*"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
             context.startActivity(Intent.createChooser(shareIntent, null))
             isSharing = false
         }
@@ -74,7 +75,10 @@ fun ShareButton(
     }
 }
 
-suspend fun downloadImageAndGetUri(context: Context, imageUrl: String): android.net.Uri? {
+suspend fun downloadImageAndGetUri(
+    context: Context,
+    imageUrl: String,
+): android.net.Uri? {
     return withContext(Dispatchers.IO) {
         try {
             val url = URL(imageUrl)
@@ -93,7 +97,7 @@ suspend fun downloadImageAndGetUri(context: Context, imageUrl: String): android.
             FileProvider.getUriForFile(
                 context,
                 "${context.packageName}.fileprovider",
-                file
+                file,
             )
         } catch (e: Exception) {
             e.printStackTrace()
