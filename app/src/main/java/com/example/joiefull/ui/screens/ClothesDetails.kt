@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -181,7 +182,8 @@ fun StarRatingBar(
                     start = 10.dp,
                 )
                 .clearAndSetSemantics {
-                    contentDescription = "Rating"
+                    contentDescription =
+                        "Barre de notation de ${rating.toInt()} sur $maxStars étoiles."
                 },
         verticalAlignment = Alignment.CenterVertically,
     ) {
