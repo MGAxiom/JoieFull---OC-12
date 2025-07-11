@@ -20,7 +20,7 @@ class ClothesViewModel(
         fetchClothes()
     }
 
-    private fun fetchClothes() {
+    fun fetchClothes() {
         viewModelScope.launch {
             _uiState.value = ClothesListUiState.Loading
             clothesRepository.getAllClothes()
