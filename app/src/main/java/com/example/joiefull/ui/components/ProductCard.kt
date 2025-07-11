@@ -23,8 +23,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +47,12 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieClipSpec
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.joiefull.R
 import com.example.joiefull.model.Product
 import com.example.joiefull.utils.ShareButton
@@ -210,8 +220,21 @@ fun CustomPillButton(
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.filling_heart_like_animation))
+    var isPlaying by remember { mutableStateOf(false) }
+    val LocalLottieClipSpec = staticCompositionLocalOf { LottieClipSpec.Progress() }
+    val progress by animateLottieCompositionAsState(
+        composition,
+        clipSpec = if (isLiked) LocalLottieClipSpec.current.copy(0f, 0.6f) else LocalLottieClipSpec.current.copy(0.5f, 1f),
+        isPlaying = isPlaying,
+        iterations = 1
+    )
+
     Button(
-        onClick = { onClick(id) },
+        onClick = {
+            onClick(id)
+            isPlaying = true
+        },
         modifier = modifier.defaultMinSize(minHeight = 8.dp),
         contentPadding =
             PaddingValues(
@@ -229,17 +252,11 @@ fun CustomPillButton(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Icon(
-                painter =
-                    if (isLiked) {
-                        painterResource(R.drawable.baseline_favorite_24)
-                    } else {
-                        painterResource(R.drawable.outline_favorite_border_24)
-                    },
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
+            LottieAnimation(
+                modifier = Modifier.size(35.dp),
+                composition = composition,
+                progress = { progress },
             )
             Text(
                 if (isLiked) "1" else "0",
@@ -289,8 +306,8 @@ fun DetailsCardPreview() {
         DetailsCard(
             imageUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                    "main/img/accessories/1.jpg",
+                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                        "main/img/accessories/1.jpg",
             modifier = Modifier,
             productTextInfos = "Veste Urbaine - 34€",
         )
@@ -310,8 +327,8 @@ fun ListCardPreview() {
         ListCard(
             productImgUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                    "main/img/accessories/1.jpg",
+                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                        "main/img/accessories/1.jpg",
             productImgDescription = "",
             modifier = Modifier,
         )
