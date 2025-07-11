@@ -53,7 +53,7 @@ class ClothesViewModelTest {
         )
 
     @Test
-    fun `test fetchClothes succes after initial error on viewModel`() =
+    fun `test fetchClothes success after initial error on viewModel`() =
         runTest {
             val initialErrorMessage = "Initial Network Failure"
 

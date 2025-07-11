@@ -124,7 +124,7 @@ fun DetailsCard(
         shape = MaterialTheme.shapes.large,
         modifier =
             modifier.semantics {
-                contentDescription = productTextInfos
+                contentDescription = "image $productTextInfos"
             },
     ) {
         Column {
@@ -140,7 +140,7 @@ fun DetailsCard(
                     contentScale = ContentScale.FillBounds,
                     modifier =
                         Modifier.semantics {
-                            contentDescription = productTextInfos
+                            contentDescription = "image $productTextInfos"
                         },
                 )
                 Row(

@@ -72,7 +72,6 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
-    implementation(libs.moshi.v1150)
     implementation(libs.moshi.kotlin)
 
     // Koin
