@@ -17,10 +17,9 @@ JoieFull is an Android application designed to help users browse, discover, and 
 <!-- Add 2-3 compelling screenshots of your app in action. -->
 <!-- Replace these with actual links to your images. You can upload them to your GitHub repo (e.g., in a /screenshots folder) or an image hosting service. -->
 
-| Home Screen                                   | Product Detail                             | Favorites (Optional)                     |
-| :-------------------------------------------- | :----------------------------------------- | :--------------------------------------- |
-| ![Home Screen Screenshot](link_to_home_ss.png) | ![Detail Screen Screenshot](link_to_detail_ss.png) | ![Favorites Screen Screenshot](link_to_fav_ss.png) |
-
+| Home Screen                                                                                         | Product Detail                             | 
+|:----------------------------------------------------------------------------------------------------| :----------------------------------------- | 
+| ![Home Screen Screenshot](https://i.postimg.cc/vHXSfsQv/Capture-d-e-cran-2025-07-11-a-11-15-29.png) | ![Detail Screen Screenshot](https://i.postimg.cc/qMp5NRdR/Capture-d-e-cran-2025-07-11-a-11-15-46.png) |
 
 ## 🛠️ Built With
 
