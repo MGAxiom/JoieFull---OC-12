@@ -23,6 +23,7 @@ retrofit = "2.11.0"
 koinAndroid = "4.0.4"
 koinComposeViewmodel = "4.0.4"
 turbine = "1.1.0"
+adaptiveNavigationAndroid = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.r
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeViewmodel" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+androidx-adaptive-navigation-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation-android", version.ref = "adaptiveNavigationAndroid" }
 
 
 [plugins]

@@ -65,9 +65,25 @@ class ClothesViewModel(
         if (currentState is ClothesListUiState.Success) {
             val updatedProducts =
                 currentState.clothes.map { product ->
-                    if (product.id == productId) product.copy(isFavorite = !product.isFavorite) else product
+                    if (product.id == productId) {
+                        product.copy(
+                            isFavorite = !product.isFavorite,
+                            rate = product.rate + updateRatesNumber(product),
+                        )
+                    } else {
+                        product
+                    }
                 }
             _uiState.value = ClothesListUiState.Success(updatedProducts)
+        }
+    }
+
+    // Facilitator function to update the number of rate of the product
+    private fun updateRatesNumber(product: Product): Double {
+        if (!product.isFavorite) {
+            return +1.0
+        } else {
+            return -1.0
         }
     }
 

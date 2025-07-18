@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -50,7 +48,6 @@ import coil3.compose.LocalAsyncImagePreviewHandler
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.joiefull.R
@@ -147,7 +144,7 @@ fun DetailsCard(
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = "",
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Crop,
                     modifier =
                         Modifier.semantics {
                             contentDescription = "image $productTextInfos"
@@ -227,7 +224,7 @@ fun CustomPillButton(
         composition,
         clipSpec = if (isLiked) LocalLottieClipSpec.current.copy(0f, 0.6f) else LocalLottieClipSpec.current.copy(0.5f, 1f),
         isPlaying = isPlaying,
-        iterations = 1
+        iterations = 1,
     )
 
     Button(
@@ -306,8 +303,8 @@ fun DetailsCardPreview() {
         DetailsCard(
             imageUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                        "main/img/accessories/1.jpg",
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
             modifier = Modifier,
             productTextInfos = "Veste Urbaine - 34€",
         )
@@ -327,8 +324,8 @@ fun ListCardPreview() {
         ListCard(
             productImgUrl =
                 "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/" +
-                        "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
-                        "main/img/accessories/1.jpg",
+                    "D-velopper-une-interface-accessible-en-Jetpack-Compose/" +
+                    "main/img/accessories/1.jpg",
             productImgDescription = "",
             modifier = Modifier,
         )

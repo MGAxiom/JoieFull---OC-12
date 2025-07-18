@@ -81,6 +81,9 @@ dependencies {
     // Lottie
     implementation(libs.lottie.compose)
 
+    // Tablet
+    implementation(libs.androidx.adaptive.navigation.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
